@@ -1,0 +1,114 @@
+// public/index.html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parallel Charging Station Streams</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
+      }
+      .streams-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .station-info {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .status {
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      .available {
+        background-color: #4caf50;
+        color: white;
+      }
+      .charging {
+        background-color: #2196f3;
+        color: white;
+      }
+      .unavailable {
+        background-color: #f44336;
+        color: white;
+      }
+      .preparing {
+        background-color: #ff9800;
+        color: white;
+      }
+      .finishing {
+        background-color: #9c27b0;
+        color: white;
+      }
+      .faulted {
+        background-color: #f44336;
+        color: white;
+      }
+      .suspended {
+        background-color: #607d8b;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Charging Station Live Streams</h1>
+    <div id="connection-status"></div>
+    <div class="streams-container" id="streams-container">
+      <!-- Stream containers will be dynamically added here -->
+    </div>
+
+    <script>
+      const ws = new WebSocket("ws://localhost:3000")
+      const connectionStatus = document.getElementById("connection-status")
+      const streamsContainer = document.getElementById("streams-container")
+
+      // Initialize containers for each stream
+      function initializeStreamContainers(numStreams) {
+        for (let i = 0; i < numStreams; i++) {
+          const container = document.createElement("div")
+          container.className = "station-info"
+          container.id = `stream-${i}`
+          container.innerHTML = `
+                    <h2>Stream ${i + 1}</h2>
+                    <div class="station-content">Waiting for station data...</div>
+                `
+          streamsContainer.appendChild(container)
+        }
+      }
+
+      ws.onopen = () => {
+        connectionStatus.innerHTML = '<p style="color: green;">Connected to server</p>'
+        initializeStreamContainers(5) // Initialize containers for 2 streams
+      }
+
+      ws.onmessage = (event) => {
+        const message = JSON.parse(event.data)
+
+        if (message.type === "station_update") {
+          const station = message.data
+          const streamContainer = document.getElementById(`stream-${message.streamId}`)
+
+          if (streamContainer) {
+            const content = streamContainer.querySelector(".station-content")
+            content.innerHTML = `
+                        <p><strong>Location:</strong> ${station.location.lat}, ${station.location.long}</p>
+                        <p><strong>Charger Type:</strong> ${station.charger_type.toUpperCase()}</p>
+                        <p><strong>Status:</strong> <span class="status ${station.connector_status}">${station.connector_status}</span></p>
+                        <p><small>Last updated: ${new Date().toLocaleTimeString()}</small></p>
+                    `
+          }
+        }
+      }
+
+      ws.onclose = () => {
+        connectionStatus.innerHTML = '<p style="color: red;">Disconnected from server</p>'
+      }
+    </script>
+  </body>
+</html>

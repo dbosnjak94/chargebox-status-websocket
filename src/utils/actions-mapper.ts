@@ -1,0 +1,92 @@
+const actionMap = {
+  1: "Authorize",
+  2: "BootNotification",
+  3: "CancelReservation",
+  4: "CertificateSigned",
+  5: "ChangeAvailability",
+  6: "ChangeConfiguration",
+  7: "ClearCache",
+  8: "ClearChargingProfile",
+  9: "ClearDisplayMessage",
+  10: "ClearedChargingLimit",
+  11: "ClearVariableMonitoring",
+  12: "CostUpdated",
+  13: "CustomerInformation",
+  14: "DataTransfer",
+  15: "DeleteCertificate",
+  16: "DiagnosticsStatusNotification",
+  17: "FirmwareStatusNotification",
+  18: "Get15118EVCertificate",
+  19: "GetCertificateStatus",
+  20: "GetCompositeSchedule",
+  21: "GetConfiguration",
+  22: "GetDiagnostics",
+  23: "GetDisplayMessages",
+  24: "GetInstalledCertificateIds",
+  25: "GetLocalListVersion",
+  26: "GetLog",
+  27: "GetMonitoringReport",
+  28: "GetReport",
+  29: "GetTransactionStatus",
+  30: "GetVariables",
+  31: "GetVaseReport",
+  32: "Heartbeat",
+  33: "InstallCertificate",
+  34: "LogStatusNotification",
+  35: "MeterValues",
+  36: "NotifyCentralChargingNeeds",
+  37: "NotifyChargingLimit",
+  38: "NotifyCustomerInformation",
+  39: "NotifyDisplayMessages",
+  40: "NotifyEVChargingNeeds",
+  41: "NotifyEVChargingSchedule",
+  42: "NotifyEvent",
+  43: "NotifyMonitoringReport",
+  44: "NotifyReport",
+  45: "PublishFirmware",
+  46: "PublishFirmwareStatusNotification",
+  47: "RemoteStartTransaction",
+  48: "RemoteStopTransaction",
+  49: "Renegotiate15118Schedule",
+  50: "ReportChargingProfiles",
+  51: "RequestStartTransaction",
+  52: "RequestStopTransaction",
+  53: "ReservationStatusUpdate",
+  54: "ReserveNow",
+  55: "Reset",
+  56: "SendLocalList",
+  57: "SetChargingProfile",
+  58: "SetDisplayMessage",
+  59: "SetMonitoringBase",
+  60: "SetMonitoringLevel",
+  61: "SetNetworkProfile",
+  62: "SetVariableMonitoring",
+  63: "SetVariables",
+  64: "SignCertificate",
+  65: "StartTransaction",
+  66: "StatusNotification",
+  67: "StopTransaction",
+  68: "TransactionEvent",
+  69: "TriggerMessage",
+  70: "UnlockConnector",
+  71: "UnpublishFirmware",
+  72: "Update15118EVCertificate",
+  73: "UpdateFirmware",
+  74: "SecurityEventNotification",
+  77: "ExtendedTriggerMessage",
+}
+
+function getActionName(actionId: any) {
+  // Convert input to number if it's a string
+  const id = Number(actionId)
+
+  // Check if the ID exists in our map
+  if (actionId in actionMap) {
+    return actionMap[actionId]
+  }
+
+  // Return null or throw error if ID is not found
+  return null
+}
+
+export default getActionName
