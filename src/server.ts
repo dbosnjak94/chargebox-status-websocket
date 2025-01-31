@@ -97,7 +97,7 @@ wss.on("connection", (ws: WebSocket) => {
         }
         ws.send(JSON.stringify(errorMessage))
       }
-    }, 10000)
+    }, 2000)
   })
 
   // Handle client messages
